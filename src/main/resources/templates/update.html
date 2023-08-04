@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Update</title>
+</head>
+<body>
+<form th:method="POST" th:action="@{/admin/update}" th:object="${update}">
+    <label for="i"> Enter id: </label>
+    <input type="number" th:field="*{id}" id="i">
+    <br/>
+    <label for="n">Enter name: </label>
+    <input type="text" th:field="*{name}" id="n">
+    <br/>
+    <label for="s">Enter surName: </label>
+    <input type="text" th:field="*{surName}" id="s">
+    <br/>
+    <label for="a">Enter age: </label>
+    <input type="number" th:field="*{age}" id="a">
+    <br/>
+    <label for="pass">Enter password: </label>
+    <input type="number" th:field="*{password}" id="pass">
+    <br/>
+    <label for="roles">Enter roles: </label>
+    <input type="text" th:field="*{roles}" id="roles">
+    <br/>
+    <br/>
+    <input type="submit" value="UpdateUser">
+</form>
+<br/>
+<br/>
+<form th:action="@{/admin}" method="get">
+    <input type="submit" value="Sign Out"/>
+</form>
+</body>
+</html>

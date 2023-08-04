@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Date_User</title>
+</head>
+<body>
+<div style="text-align: center;">
+    <table th:border="3">
+        <caption>User</caption>
+        <thead>
+        <tr>
+            <th>id</th>
+            <th>name</th>
+            <th>surName</th>
+            <th>age</th>
+            <th>password</th>
+            <th>roles</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr style="text-align: center; vertical-align: middle" th:each="User : ${user}">
+            <td th:text="${User.id}">id</td>
+            <td th:text="${User.name}">name</td>
+            <td th:text="${User.surName}">surName</td>
+            <td th:text="${User.age}">age</td>
+            <td th:text="${User.password}">password</td>
+            <td th:text="${User.roles}">roles</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<br/>
+<br/>
+<form th:action="@{/}" method="get">
+    <input type="submit" value="Sign Out"/>
+</form>
+</body>
+</html>

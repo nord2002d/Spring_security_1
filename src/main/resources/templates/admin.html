@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Main page</title>
+</head>
+<body>
+<h1> Admin page </h1>
+<form th:action="@{admin/users}" method="get">
+  <input type="submit" value="Пользователи"/>
+</form>
+<br/>
+<br/>
+<form th:action="@{admin/add}" method="get">
+  <input type="submit" value="Добавить пользователя">
+</form>
+<br/>
+<br/>
+<form th:action="@{admin/delete}" method="get">
+  <input type="submit" value="Удалить пользователя">
+</form>
+<br/>
+<br/>
+<form th:action="@{admin/update}" method="get">
+  <input type="submit" value="Обновить пользователя">
+</form>
+<br/>
+<br/>
+<form th:action="@{/}" method="get">
+  <input type="submit" value="Sign Out"/>
+</form>
+</body>
+</html>
