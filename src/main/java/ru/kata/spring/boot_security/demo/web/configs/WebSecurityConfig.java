@@ -1,6 +1,5 @@
 package ru.kata.spring.boot_security.demo.web.configs;
 
-import lombok.AllArgsConstructor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -9,13 +8,17 @@ import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import ru.kata.spring.boot_security.demo.web.service.UserService;
 
 
-@AllArgsConstructor
+
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private UserService userService;
     private final SuccessUserHandler successUserHandler;
 
+    public WebSecurityConfig(UserService userService, SuccessUserHandler successUserHandler) {
+        this.userService = userService;
+        this.successUserHandler = successUserHandler;
+    }
 
 
     @Override

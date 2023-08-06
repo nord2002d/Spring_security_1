@@ -1,7 +1,6 @@
 package ru.kata.spring.boot_security.demo.web.service;
 
 
-import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -11,11 +10,15 @@ import ru.kata.spring.boot_security.demo.web.repository.UserRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-@AllArgsConstructor
+
 @Service
 public class UserServiceImpl implements UserService {
 
+
     private UserRepository userRepository;
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
 
     @Override
