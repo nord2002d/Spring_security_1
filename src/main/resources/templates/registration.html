@@ -16,10 +16,13 @@
     <input type="number" th:field="*{age}" id="age">
     <br/>
     <label for="pass">Пароль: </label>
-    <input type="number" th:field="*{password}" id="pass">
+    <input type="password" th:field="*{password}" id="pass">
     <br/>
     <label for="roles">Роль: </label>
-    <input type="text" th:field="*{roles}" id="roles">
+    <select th:field="*{roles}" id = "roles">
+        <option th:value="USER" th:text="USER"></option>
+        <option th:value="ADMIN" th:text="ADMIN"></option>
+    </select>
     <br/>
     <br/>
     <input type="submit" value="Добавить">

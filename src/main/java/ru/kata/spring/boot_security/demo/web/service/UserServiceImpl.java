@@ -4,6 +4,7 @@ package ru.kata.spring.boot_security.demo.web.service;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import ru.kata.spring.boot_security.demo.web.exeptions.UserNameException;
 import ru.kata.spring.boot_security.demo.web.model.User;
 import ru.kata.spring.boot_security.demo.web.repository.UserRepository;
 
@@ -22,11 +23,24 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public void add(User user) {
-        try {
+    public void add(User user) throws UserNameException {
+        User user1 = userRepository.findByNameLike(user.getUsername());
+        if(user1 == null) {
             userRepository.save(user);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } else {
+            throw new UserNameException("Пользователь с таким именем уже существует, укажите другое имя");
+        }
+    }
+
+    @Override
+    public void update(User user) throws UserNameException {
+        User user1 = userRepository.findByNameLike(user.getUsername());
+        if(user.getId() != null && user1 == null){
+            userRepository.save(user);
+        } else if(user1.getId().equals(user.getId()) && user1.getUsername().equals(user.getUsername())) {
+            userRepository.save(user);
+        } else {
+            throw new UserNameException("Пользователь с таким именем уже существует, укажите другое имя");
         }
     }
 

@@ -5,7 +5,14 @@
     <title>All_USERS</title>
 </head>
 <body>
-<div style="text-align: center;">
+<div>
+    <br/>
+    <br/>
+    <form th:action="@{/admin}" method="get">
+        <input type="submit" value="Sign Out"/>
+    </form>
+    <br/>
+    <br/>
     <table th:border="3">
         <caption>All_Users</caption>
         <thead>
@@ -19,21 +26,28 @@
         </tr>
         </thead>
         <tbody>
-        <tr style="text-align: center; vertical-align: middle" th:each="User : ${users}">
+        <tr th:each="User : ${users}">
             <td th:text="${User.id}">id</td>
             <td th:text="${User.username}">name</td>
             <td th:text="${User.surName}">surName</td>
             <td th:text="${User.age}">age</td>
             <td th:text="${User.password}">password</td>
             <td th:text="${User.roles}">roles</td>
+            <td>
+                <form th:method="DELETE" th:action="@{/admin}">
+                    <input name="id" th:value="${User.id}" type="hidden"/>
+                    <button type="submit" value="Remove user">Remove</button>
+                </form>
+            </td>
+            <td>
+                <form th:method="GET" th:action="@{/admin/formUpdate}">
+                    <input name="id" th:value="${User.id}" type="hidden"/>
+                    <button type="submit" value="Update user">Update</button>
+                </form>
+            </td>
         </tr>
         </tbody>
     </table>
 </div>
-<br/>
-<br/>
-<form th:action="@{/admin}" method="get">
-    <input type="submit" value="Sign Out"/>
-</form>
 </body>
 </html>
