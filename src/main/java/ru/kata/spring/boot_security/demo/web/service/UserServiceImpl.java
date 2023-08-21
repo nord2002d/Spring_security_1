@@ -3,11 +3,15 @@ package ru.kata.spring.boot_security.demo.web.service;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import ru.kata.spring.boot_security.demo.web.dao.UserDaoImpl;
 import ru.kata.spring.boot_security.demo.web.exeptions.UserNameException;
+import ru.kata.spring.boot_security.demo.web.exeptions.UserNotFoundException;
 import ru.kata.spring.boot_security.demo.web.model.User;
-import ru.kata.spring.boot_security.demo.web.repository.UserRepository;
 
+import javax.validation.ConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -16,38 +20,47 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
 
-    private UserRepository userRepository;
-    public UserServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    private UserDaoImpl userDaoImp;
+
+    public UserServiceImpl(UserDaoImpl userDaoImp) {
+        this.userDaoImp = userDaoImp;
     }
 
-
+    @Transactional
     @Override
     public void add(User user) throws UserNameException {
-        User user1 = userRepository.findByNameLike(user.getUsername());
-        if(user1 == null) {
-            userRepository.save(user);
-        } else {
-            throw new UserNameException("Пользователь с таким именем уже существует, укажите другое имя");
+        if(!checkUserName(user)) {
+            throw new UserNameException(
+                    String.format("Пользователь с именем %s уже существует, укажите другое имя",user.getUsername()));
+        }
+        try {
+            userDaoImp.add(user);
+        } catch (ConstraintViolationException ex) {
+            throw ex;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
-
+    @Transactional
     @Override
-    public void update(User user) throws UserNameException {
-        User user1 = userRepository.findByNameLike(user.getUsername());
-        if(user.getId() != null && user1 == null){
-            userRepository.save(user);
-        } else if(user1.getId().equals(user.getId()) && user1.getUsername().equals(user.getUsername())) {
-            userRepository.save(user);
-        } else {
-            throw new UserNameException("Пользователь с таким именем уже существует, укажите другое имя");
+    public void update(User updateUser) throws UserNameException {
+        User userFromDB = userDaoImp.getUser(updateUser.getId());
+        if(!checkUserName(updateUser)) {
+            throw new UserNameException(
+                    String.format("Пользователь с именем %s уже существует, укажите другое имя",updateUser.getUsername()));
         }
+        userFromDB.setUsername(updateUser.getUsername());
+        userFromDB.setSurName(updateUser.getSurName());
+        userFromDB.setAge(updateUser.getAge());
+        verificationPassword(updateUser,userFromDB);
+        userFromDB.setRoles(updateUser.getRoles());
+        userDaoImp.add(userFromDB);
     }
-
+    @Transactional
     @Override
     public List<User> listUsers() {
         try {
-            Iterable<User> users = userRepository.findAll();
+            Iterable<User> users = userDaoImp.listUsers();
             List<User> result = new ArrayList<>();
              users.forEach(result::add);
             return result;
@@ -56,43 +69,64 @@ public class UserServiceImpl implements UserService {
         }
         return List.of();
     }
+    @Transactional
     @Override
-    public User getUser(long id) {
+    public User getUser(long id) throws UserNotFoundException {
         Optional<User> user = Optional.empty();
         try {
-            user = userRepository.findById(id);
+            user = Optional.ofNullable(userDaoImp.getUser(id));
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return user.orElse(new User()) ;
+        return user.orElseThrow(() ->
+                new UserNotFoundException(String.format("Пользователь с таки id - %d не найден", id)));
     }
+    @Transactional
     @Override
-    public void removeUser(long id) {
-        try {
-           userRepository.deleteById(id);
-        } catch (Exception e) {
-            e.printStackTrace();
+    public void removeUser(long id) throws UserNotFoundException {
+        Optional<User> user = Optional.ofNullable(userDaoImp.getUser(id));
+        if (user.isPresent()) {
+            userDaoImp.removeUser(user.get());
+        } else {
+            throw new UserNotFoundException(String.format("Пользователь с таки id - %d не найден", id));
         }
     }
-
+    @Transactional
     @Override
     public User getUserOnNme(String username) {
-        User user = null;
+        Optional<User> user = Optional.empty();
         try {
-           user = userRepository.findByNameLike(username);
+           user = userDaoImp.findByNameLike(username);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return user;
+        return user.orElseThrow();
     }
-
+    @Transactional
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByNameLike(username);
-        if(user == null) {
+        Optional<User> user = userDaoImp.findByNameLike(username);
+        if(user.isEmpty()) {
             throw new UsernameNotFoundException(String.format("User %s not found",username));
         }
-        return user;
+        return user.get();
+    }
+
+    private void verificationPassword(User updateUser, User userFromDB) {
+        if (updateUser.getPassword().equals(userFromDB.getPassword())) {
+            userFromDB.setPassword(userFromDB.getPassword());
+        }
+        userFromDB.setPassword(new BCryptPasswordEncoder().encode(updateUser.getPassword()));
+    }
+
+    @Transactional
+    public boolean checkUserName(User updateUser) {
+        Optional<User> userName =  userDaoImp.findByNameLike(updateUser.getUsername());
+        if(userName.isEmpty() || (userName.get().getId().equals(updateUser.getId())
+                && userName.get().getUsername().equals(updateUser.getUsername()))) {
+            return true;
+        }
+        return false;
     }
 
 }

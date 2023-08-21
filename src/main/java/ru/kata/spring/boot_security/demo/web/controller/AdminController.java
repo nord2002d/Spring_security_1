@@ -1,16 +1,22 @@
 package ru.kata.spring.boot_security.demo.web.controller;
 
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.web.exeptions.UserNameException;
+import ru.kata.spring.boot_security.demo.web.exeptions.UserNotFoundException;
 import ru.kata.spring.boot_security.demo.web.model.Role;
 import ru.kata.spring.boot_security.demo.web.model.User;
 import ru.kata.spring.boot_security.demo.web.service.UserService;
 
+import javax.validation.Valid;
 import java.util.Set;
 
+@Validated
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
@@ -51,38 +57,20 @@ public class AdminController {
     }
 
     @DeleteMapping
-    public String removeUser(@RequestParam("id") long id) {
+    public String removeUser(@RequestParam("id") long id) throws UserNotFoundException {
         userService.removeUser(id);
         return REDIRECT;
     }
 
     @GetMapping("/formUpdate")
-    public String getFormUpdate(ModelMap model, @RequestParam("id") long id) {
+    public String getFormUpdate(ModelMap model, @RequestParam("id") long id) throws UserNotFoundException {
         model.addAttribute("update", userService.getUser(id));
         return "update";
     }
 
     @PatchMapping
-    public String updateUsers(@RequestParam("id") long id,
-                              @RequestParam("username") String username,
-                              @RequestParam("surName") String surName,
-                              @RequestParam("age") int age,
-                              @RequestParam("password") String password,
-                              @RequestParam("roles") String roles) throws UserNameException {
-
-        User user = new User();
-        user.setId(id);
-        user.setUsername(username);
-        user.setSurName(surName);
-        user.setAge(age);
-        User user1 = userService.getUser(id);
-        if (user1.getPassword().equals(password)) {
-            user.setPassword(password);
-        } else {
-            user.setPassword(new BCryptPasswordEncoder().encode(password));
-        }
-        user.setRoles(Set.of(Role.valueOf(roles)));
-        userService.update(user);
+    public String updateUsers(@ModelAttribute("user") @Valid User user, BindingResult bindingResult) throws UserNameException {
+            userService.update(user);
         return REDIRECT;
     }
 

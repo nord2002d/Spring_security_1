@@ -1,9 +1,11 @@
 package ru.kata.spring.boot_security.demo.web.model;
 
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Set;
@@ -16,12 +18,20 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "user_name")
+
+    @NotBlank( message = "не может быть пустым, заполните поле")
+    @Size( min = 2, max = 30, message = "не может быть меньше 2 символов и больше 30")
     private String name;
+    @NotBlank( message = "не может быть пустым, заполните поле")
+    @Size( min = 2, max = 30, message = "не может быть меньше 2 символов и больше 30")
     @Column(name = "sur_name")
     private String surName;
+    @Min(value = 1, message = "Минимальное значение 1, укажите корректное значение")
+    @Max(value = 130, message = "Максимальное значение 130, укажите корректное значение")
+    @Positive( message = "не может быть пустым, заполните поле")
     @Column(name = "age")
     private int age;
+    @NotBlank( message = "не может быть пустым, заполните поле")
     @Column(name = "password")
     private String password;
     @ElementCollection(targetClass = Role.class,fetch = FetchType.EAGER)
@@ -33,7 +43,7 @@ public class User implements UserDetails {
     public User() {
     }
 
-    public User(String name, String surName, int age, String password, Set<Role> roles) {
+    public User(String name,String surName,int age,String password, Set<Role> roles) {
         this.name = name;
         this.surName = surName;
         this.age = age;

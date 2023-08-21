@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Update</title>
 </head>
 <body>
-<form th:method="PATCH" th:action="@{/admin}" th:object="${update}">
+<form th:method="patch" th:action="@{/admin}" th:object="${update}">
     <label for="i"> Enter id: </label>
     <input type="number" th:field="*{id}" id="i">
     <br/>

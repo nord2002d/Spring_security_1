@@ -1,18 +1,8 @@
-create table users
-(
-    id        bigint auto_increment
-        primary key,
-    age       int          null,
-    user_name varchar(255) null,
-    password  varchar(255) null,
-    sur_name  varchar(255) null
-);
+INSERT INTO users (age, sur_name, password, user_name)
+VALUES ('12', 'Gigachad', '$2a$10$nuT.9/Im9lVxaurtujGn.O05KgQ7fZJhX3KmZbzNRS5cw7AqCEVQS', 'admin'),
+       ('14', 'Whocares', '$2a$10$S.UGeHU4sNFBvHdj3GMHxOEeMmfOgl8fZz3h54xYitcH6Gv.CmNtS', 'user');
 
-create table user_role
-(
-    user_id bigint       not null,
-    roles   varchar(255) null,
-    constraint FKj345gk1bovqvfame88rcx7yyx
-        foreign key (user_id) references users (id)
-);
+INSERT INTO user_role (user_id,roles)
+VALUES (1,'ADMIN'),
+       (2,'USER');
 
