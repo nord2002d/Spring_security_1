@@ -11,7 +11,6 @@ import ru.kata.spring.boot_security.demo.web.exeptions.UserNameException;
 import ru.kata.spring.boot_security.demo.web.exeptions.UserNotFoundException;
 import ru.kata.spring.boot_security.demo.web.model.User;
 
-import javax.validation.ConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -35,8 +34,6 @@ public class UserServiceImpl implements UserService {
         }
         try {
             userDaoImp.add(user);
-        } catch (ConstraintViolationException ex) {
-            throw ex;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -46,8 +43,7 @@ public class UserServiceImpl implements UserService {
     public void update(User updateUser) throws UserNameException {
         User userFromDB = userDaoImp.getUser(updateUser.getId());
         if(!checkUserName(updateUser)) {
-            throw new UserNameException(
-                    String.format("Пользователь с именем %s уже существует, укажите другое имя",updateUser.getUsername()));
+            throw new UserNameException("Пользователь уже существует, укажите другое имя или id");
         }
         userFromDB.setUsername(updateUser.getUsername());
         userFromDB.setSurName(updateUser.getSurName());

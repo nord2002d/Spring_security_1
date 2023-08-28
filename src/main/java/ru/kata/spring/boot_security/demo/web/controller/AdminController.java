@@ -1,22 +1,18 @@
 package ru.kata.spring.boot_security.demo.web.controller;
 
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.web.exeptions.UserNameException;
 import ru.kata.spring.boot_security.demo.web.exeptions.UserNotFoundException;
-import ru.kata.spring.boot_security.demo.web.model.Role;
 import ru.kata.spring.boot_security.demo.web.model.User;
 import ru.kata.spring.boot_security.demo.web.service.UserService;
 
 import javax.validation.Valid;
-import java.util.Set;
 
-@Validated
+
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
@@ -39,21 +35,19 @@ public class AdminController {
         return "users";
     }
 
-    @PostMapping
-    public String addUser(@RequestParam("username") String username,
-                          @RequestParam("surName") String surName,
-                          @RequestParam("age") int age,
-                          @RequestParam("password") String password,
-                          @RequestParam("roles") String roles) throws UserNameException {
-        User user = new User(username, surName, age, new BCryptPasswordEncoder().encode(password), Set.of(Role.valueOf(roles)));
-        userService.add(user);
-        return REDIRECT;
+    @GetMapping("/formAdd")
+    public String getFormAddUser(@ModelAttribute("user") User user) {
+
+        return "add";
     }
 
-    @GetMapping("/formAdd")
-    public String getFormAddUser(ModelMap model) {
-        model.addAttribute("add", new User());
-        return "add";
+    @PostMapping
+    public String addUser(@ModelAttribute("user") @Valid User user, BindingResult bindingResult) throws UserNameException {
+        if (bindingResult.hasErrors()) {
+            return "add";
+        }
+        userService.add(user);
+        return REDIRECT;
     }
 
     @DeleteMapping
@@ -64,13 +58,16 @@ public class AdminController {
 
     @GetMapping("/formUpdate")
     public String getFormUpdate(ModelMap model, @RequestParam("id") long id) throws UserNotFoundException {
-        model.addAttribute("update", userService.getUser(id));
+        model.addAttribute("user", userService.getUser(id));
         return "update";
     }
 
     @PatchMapping
     public String updateUsers(@ModelAttribute("user") @Valid User user, BindingResult bindingResult) throws UserNameException {
-            userService.update(user);
+        if (bindingResult.hasErrors()) {
+            return "update";
+        }
+        userService.update(user);
         return REDIRECT;
     }
 

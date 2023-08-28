@@ -14,28 +14,29 @@ import java.util.Set;
 @Entity
 @Table(name = "users")
 public class User implements UserDetails {
+    private static final Long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @NotBlank( message = "не может быть пустым, заполните поле")
-    @Size( min = 2, max = 30, message = "не может быть меньше 2 символов и больше 30")
+    @NotBlank( message = "Поле не может быть пустым, заполните поле")
+    @Size( min = 2, max = 30, message = "Поел не может быть меньше 2 символов и больше 30")
     private String name;
-    @NotBlank( message = "не может быть пустым, заполните поле")
-    @Size( min = 2, max = 30, message = "не может быть меньше 2 символов и больше 30")
+    @NotBlank( message = "Поле не может быть пустым, заполните поле")
+    @Size( min = 2, max = 30, message = "Поел не может быть меньше 2 символов и больше 30")
     @Column(name = "sur_name")
     private String surName;
-    @Min(value = 1, message = "Минимальное значение 1, укажите корректное значение")
-    @Max(value = 130, message = "Максимальное значение 130, укажите корректное значение")
-    @Positive( message = "не может быть пустым, заполните поле")
+    @Min(value = 1, message = "Минимальное значение поля - 1, укажите корректное значение")
+    @Max(value = 130, message = "Максимальное значение поля - 130, укажите корректное значение")
+    @NotNull( message = "Поле не может быть пустым, заполните поле")
     @Column(name = "age")
-    private int age;
-    @NotBlank( message = "не может быть пустым, заполните поле")
+    private Integer age;
+    @NotBlank( message = "Поле не может быть пустым, заполните поле")
     @Column(name = "password")
     private String password;
+    @NotEmpty(message = "Поле не может быть пустым, выберите РОЛЬ для пользователя")
     @ElementCollection(targetClass = Role.class,fetch = FetchType.EAGER)
-    @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
+    @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id",foreignKey = @javax.persistence.ForeignKey(name = "none")))
     @Enumerated(EnumType.STRING)
     @Column(name = "roles")
     private Set<Role> roles;
@@ -106,11 +107,11 @@ public class User implements UserDetails {
         this.surName = surName;
     }
 
-    public int getAge() {
+    public Integer getAge() {
         return age;
     }
 
-    public void setAge(int age) {
+    public void setAge(Integer age) {
         this.age = age;
     }
 

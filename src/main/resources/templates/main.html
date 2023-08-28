@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
-      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
 <head>
   <title>Hello World!</title>
 </head>
@@ -8,11 +7,6 @@
 <h1> Hello User </h1>
 <form th:action="@{/login}" method="get">
   <input type="submit" value="Вход"/>
-</form>
-<br/>
-<br/>
-<form th:action="@{/registration}" method="get">
-  <input type="submit" value="Добавить пользователя (для теста !)))">
 </form>
 </body>
 </html>
