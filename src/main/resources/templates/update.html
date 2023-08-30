@@ -11,8 +11,8 @@
     <div style="color: red" th:if="${#fields.hasErrors('id')}" th:errors="*{id}">Name Error</div>
     <br/>
     <label for="n">Enter name: </label>
-    <input type="text" th:field="*{username}" id="n">
-    <div style="color: red" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Name Error</div>
+    <input type="text" th:field="*{name}" id="n">
+    <div style="color: red" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</div>
     <br/>
     <label for="s">Enter surName: </label>
     <input type="text" th:field="*{surName}" id="s">
@@ -26,11 +26,17 @@
     <input type="text" th:field="*{password}" id="pass">
     <div style="color: red" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password Error</div>
     <br/>
-    <label for="roles">Enter roles: </label>
-    <select th:field="*{roles}" id = "roles">
-        <option th:value="USER" th:text="USER"></option>
-        <option th:value="ADMIN" th:text="ADMIN"></option>
-    </select>
+    <br/>
+    <legend>Choose your Role</legend>
+    <div>
+        <input type="checkbox" id="us" name="roles" value="USER" />
+        <label for="us">USER</label>
+    </div>
+    <div>
+        <input type="checkbox" id="ad" name="roles" value="ADMIN" />
+        <label for="ad">ADMIN</label>
+    </div>
+    <div style="color: red" th:if="${#fields.hasErrors('roles')}" th:errors="*{roles}">Roles Error</div>
     <br/>
     <br/>
     <input type="submit" value="UpdateUser">

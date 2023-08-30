@@ -1,5 +1,6 @@
 package ru.kata.spring.boot_security.demo.web.configs;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -16,7 +17,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private UserServiceImpl userServiceImp;
     private final SuccessUserHandler successUserHandler;
-
+    @Autowired
     public WebSecurityConfig(UserServiceImpl userServiceImp, SuccessUserHandler successUserHandler) {
         this.userServiceImp = userServiceImp;
         this.successUserHandler = successUserHandler;
@@ -25,7 +26,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .authorizeRequests().antMatchers("/","/registration").permitAll()
+                .authorizeRequests().antMatchers("/").permitAll()
                 .antMatchers("/user").hasAnyRole("USER","ADMIN")
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated()

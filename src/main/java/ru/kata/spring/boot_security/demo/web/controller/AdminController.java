@@ -1,6 +1,8 @@
 package ru.kata.spring.boot_security.demo.web.controller;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -18,6 +20,7 @@ import javax.validation.Valid;
 public class AdminController {
     private UserService userService;
 
+    @Autowired
     public AdminController(UserService userService) {
         this.userService = userService;
     }
@@ -37,7 +40,6 @@ public class AdminController {
 
     @GetMapping("/formAdd")
     public String getFormAddUser(@ModelAttribute("user") User user) {
-
         return "add";
     }
 
@@ -46,7 +48,9 @@ public class AdminController {
         if (bindingResult.hasErrors()) {
             return "add";
         }
-        userService.add(user);
+        User addUser = new User(user.getUsername(), user.getSurName(), user.getAge(),
+                new BCryptPasswordEncoder().encode(user.getPassword()), user.getRoles());
+        userService.add(addUser);
         return REDIRECT;
     }
 

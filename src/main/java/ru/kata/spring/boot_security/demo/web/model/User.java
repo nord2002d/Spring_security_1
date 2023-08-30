@@ -21,6 +21,7 @@ public class User implements UserDetails {
     private Long id;
     @NotBlank( message = "Поле не может быть пустым, заполните поле")
     @Size( min = 2, max = 30, message = "Поел не может быть меньше 2 символов и больше 30")
+    @Column(name = "name")
     private String name;
     @NotBlank( message = "Поле не может быть пустым, заполните поле")
     @Size( min = 2, max = 30, message = "Поел не может быть меньше 2 символов и больше 30")
@@ -125,6 +126,13 @@ public class User implements UserDetails {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override
