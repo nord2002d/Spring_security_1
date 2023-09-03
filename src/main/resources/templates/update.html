@@ -8,7 +8,7 @@
 <form th:method="patch" th:action="@{/admin}" th:object="${user}">
     <label for="i"> Enter id: </label>
     <input type="number" th:field="*{id}" id="i">
-    <div style="color: red" th:if="${#fields.hasErrors('id')}" th:errors="*{id}">Name Error</div>
+    <div style="color: red" th:if="${#fields.hasErrors('id')}" th:errors="*{id}">Id Error</div>
     <br/>
     <label for="n">Enter name: </label>
     <input type="text" th:field="*{name}" id="n">

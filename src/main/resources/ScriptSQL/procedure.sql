@@ -1,18 +1,5 @@
-DELIMITER //
 
-CREATE PROCEDURE create_users(
-    IN id bigint,
-    IN `age` int,
-    IN username varchar(30),
-    IN `password` varchar(255),
-    IN sur_name varchar(30),
-    IN roles varchar(30)
-)
-BEGIN
-    REPLACE INTO users VALUES (id, `age`, username, `password`, sur_name);
-    DELETE FROM user_role where id = 1 LIMIT 1000;
-    DELETE FROM user_role where id = 1 LIMIT 1000;
-    INSERT INTO user_role VALUES (id, roles);
-
-END;
-DELIMITER ;
+    INSERT INTO users VALUES (1, 11, 'admin', '$2y$10$UUDoqynp3SsJuWxK6XMQnugF.zt929JjbdRT4N6yG0QUgcV7LKkVq', 'Sokolov');
+    INSERT INTO users VALUES (2, 12, 'user', '$2y$10$hDZIK07X9DFwEyDXd8u7VuaRSvF/TLffc9VHpGdcJTyMwFYNn7msC', 'Petrov');
+    INSERT INTO user_role VALUES (1, 'ADMIN');
+    INSERT INTO user_role VALUES (2, 'USER');
